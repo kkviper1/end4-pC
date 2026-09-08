@@ -148,6 +148,17 @@ AbstractBackgroundWidget {
         implicitWidth: 276
         implicitHeight: 252
 
+        FastBlurred {
+            anchors.fill: parent
+            blurSource: root.wallpaperItem
+            cardRadius: contentItem.radius
+            tint: Appearance.colors.colLayer1
+            tintOpacity: 0.55
+            trackX: root.x  
+            trackY: root.y
+            visible: Config.options.background.widgets.blurWidgets 
+        }
+
         ColumnLayout {
             id: columnLayout
             anchors {
@@ -181,7 +192,7 @@ AbstractBackgroundWidget {
                                                 Appearance.colors.colError.r,
                                                 Appearance.colors.colError.g,
                                                 Appearance.colors.colError.b, 0.15)
-                        default:           return Appearance.colors.colSurfaceContainerLow 
+                        default:           return ColorUtils.transparentize(Appearance.colors.colLayer0, 0.8)
                     }
                 }
                 border.color: {
@@ -300,9 +311,9 @@ AbstractBackgroundWidget {
                 StyledComboBox {
                     Layout.fillWidth: true
                     model: root.formatOptions
-                    colBackground: Appearance.colors.colSurfaceContainerLow
-                    colBackgroundHover: Appearance.colors.colSurfaceContainerLow
-                    colBackgroundActive: Appearance.colors.colSurfaceContainerLow // same color I didn't like the hover 
+                    colBackground: ColorUtils.transparentize(Appearance.colors.colLayer0, 0.8)
+                    colBackgroundHover: ColorUtils.transparentize(Appearance.colors.colLayer0, 0.8)
+                    colBackgroundActive: ColorUtils.transparentize(Appearance.colors.colLayer0, 0.8) // same color I didn't like the hover 
                     textRole: "displayName"
                     valueRole: "value"
                     currentIndex: {

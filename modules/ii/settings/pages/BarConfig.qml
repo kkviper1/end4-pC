@@ -47,6 +47,7 @@ ContentPage {
         { id: "utilButtons",       name: Translation.tr("Util Buttons"),         icon: "toggle_on" },
         { id: "sysTray",           name: Translation.tr("Tray"),                 icon: "inbox" },
         { id: "batteryIndicator",  name: Translation.tr("Battery"),              icon: "battery_android_frame_full" },
+        { id: "bluetooth",         name: Translation.tr("Bluetooth"),            icon: "bluetooth" },
         { id: "activeWindow",      name: Translation.tr("Active Window"),        icon: "subtitles" },
         { id: "powerButton",       name: Translation.tr("Power Button"),         icon: "power_settings_new" },
         { id: "updatesCount",      name: Translation.tr("Updates"),              icon: "deployed_code_update" },
@@ -243,6 +244,15 @@ ContentPage {
                         { displayName: Translation.tr("Segmented"), icon: "tablet",           value: "segmented" },
                     ]
                 }
+                ColorSelectionArray {
+                    icon: "brush"
+                    text: Translation.tr("Group Color")
+                    options: ["primaryContainer", "secondaryContainer", "tertiaryContainer", "layer1", "layer0"]
+                    currentValue: Config.options.bar.groupColor
+                    onSelected: newValue => {
+                        Config.options.bar.groupColor = newValue
+                    }
+                }
                 ConfigRow{
                     uniform: true
                     ConfigSwitch {
@@ -263,26 +273,35 @@ ContentPage {
                         ]
                     }
                 }
-                ConfigSwitch {
-                    buttonIcon: "panorama_wide_angle"
-                    text: Translation.tr("Show Frame")
-                    checked: Config.options.bar.showFrame
+                ConfigRow {
+                    ConfigSwitch {
+                        buttonIcon: "panorama_wide_angle"
+                        text: Translation.tr("Show Frame")
+                        checked: Config.options.bar.showFrame
 
-                    property bool switchReady: false
-                    Component.onCompleted: Qt.callLater(() => switchReady = true)
+                        property bool switchReady: false
+                        Component.onCompleted: Qt.callLater(() => switchReady = true)
 
-                    onCheckedChanged: {
-                        if (switchReady && checked) {
-                            GlobalStates.refreshBar();
+                        onCheckedChanged: {
+                            if (switchReady && checked) {
+                                GlobalStates.refreshBar();
+                            }
+                            Config.options.bar.showFrame = checked;
                         }
-                        Config.options.bar.showFrame = checked;
+                    }
+                    ConfigSwitch {
+                        buttonIcon: "colors"
+                        enabled: Config.options.bar.showFrame
+                        text: Translation.tr("Follow Frame Color")
+                        checked: Config.options.bar.followFrameColor
+                        onCheckedChanged: { Config.options.bar.followFrameColor = checked; }
                     }
                 }
                 ConfigSpinBox {
                     icon: "eraser_size_1"
                     text: Translation.tr("Frame thickness")
                     value: Config.options.bar.frameThickness
-                    from: 1
+                    from: 2
                     to: 10
                     stepSize: 1
                     onValueChanged: {
@@ -292,7 +311,7 @@ ContentPage {
                 ColorSelectionArray {
                     icon: "imagesearch_roller"
                     text: Translation.tr("Frame Color")
-                    options: ["primary", "secondary", "tertiary", "primaryContainer", "secondaryContainer", "tertiaryContainer", "black"] // sorry only solid colors transparency looks bad
+                    options: ["primaryContainer", "secondaryContainer", "tertiaryContainer", "layer0", "black"] // sorry only solid colors transparency looks bad
                     currentValue: Config.options.bar.frameColor
                     onSelected: newValue => {
                         Config.options.bar.frameColor = newValue
